@@ -1,0 +1,1 @@
+web:gunicorn college_administration_project.wsgi 
