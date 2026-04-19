@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-2lrpd%@j_ak4=#h2$nk(bb&w_%r&fake6id^2=m&#@qveq+t^5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -76,13 +76,40 @@ WSGI_APPLICATION = 'college_administration_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
+
+import os 
+if os.environ.get("RENDER"): 
+    # Production (Render + Railway MySQL) 
+    DATABASES = { 
+        "default": { 
+            "ENGINE": "django.db.backends.mysql", 
+            "NAME": os.environ.get("MYSQLDATABASE"), 
+            "USER": os.environ.get("MYSQLUSER"), 
+            "PASSWORD": os.environ.get("MYSQLPASSWORD"), 
+            "HOST": os.environ.get("MYSQLHOST"), 
+            "PORT": os.environ.get("MYSQLPORT", "3306"), 
+        } 
+    } 
+ 
+else: 
+    # Local development 
+    DATABASES = { 
+        "default": { 
+            "ENGINE": "django.db.backends.mysql", 
+            "NAME": "college", 
+            "USER": "root", 
+            "PASSWORD": "Archana@14", 
+            "HOST": "localhost", 
+            "PORT": "3306", 
+        } 
+    } 
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
