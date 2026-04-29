@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,32 +85,34 @@ WSGI_APPLICATION = 'college_administration_project.wsgi.application'
 # }
 
 
-import os 
-if os.environ.get("RENDER"): 
-    # Production (Render + Railway MySQL) 
-    DATABASES = { 
-        "default": { 
-            "ENGINE": "django.db.backends.mysql", 
-            "NAME": os.environ.get("MYSQLDATABASE"), 
-            "USER": os.environ.get("MYSQLUSER"), 
-            "PASSWORD": os.environ.get("MYSQLPASSWORD"), 
-            "HOST": os.environ.get("MYSQLHOST"), 
-            "PORT": os.environ.get("MYSQLPORT", "3306"), 
-        } 
-    } 
- 
-else: 
-    # Local development 
-    DATABASES = { 
-        "default": { 
-            "ENGINE": "django.db.backends.mysql", 
-            "NAME": "college", 
-            "USER": "root", 
-            "PASSWORD": "Archana@14", 
-            "HOST": "localhost", 
-            "PORT": "3306", 
-        } 
-    } 
+import os
+
+if os.environ.get("MYSQLHOST"):
+    # Production (Render)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.environ.get("MYSQLDATABASE"),
+            "USER": os.environ.get("MYSQLUSER"),
+            "PASSWORD": os.environ.get("MYSQLPASSWORD"),
+            "HOST": os.environ.get("MYSQLHOST"),
+            "PORT": os.environ.get("MYSQLPORT", "3306"),
+        }
+    }
+
+else:
+    # Local development
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": "college",
+            "USER": "root",
+            "PASSWORD": "Archana@14",
+            "HOST": "localhost",
+            "PORT": "3306",
+        }
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -145,11 +148,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS=[
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
     STATIC_DIR
 ]
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
